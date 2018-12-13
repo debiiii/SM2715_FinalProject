@@ -66,9 +66,9 @@ void updateBoundary() {
       }
     }
   }
-  fill(158,226,213);
+  fill(158, 226, 213);
   rectMode(CORNERS);
-  rect(lBB,uBB,rBB,dBB);
+  rect(lBB, uBB, rBB, dBB);
 }
 
 void checkOrigDelta() {
@@ -76,7 +76,7 @@ void checkOrigDelta() {
 
 
 void gameController() {
-  if (frameCount % 300 == 1) {
+  if (frameCount % 100 == 1) {
     int addAt = 0;
     switch(dirCount) {
     case 0:
@@ -93,8 +93,8 @@ void gameController() {
       addAt = dBB + cubeS/2;
       break;
     }
-    box.add(new myRect(dirCount, addAt, color(158,226,213)));
-    dirCount = (dirCount+1)%4;
+    box.add(new myRect(dirCount, addAt, color(158, 226, 213)));
+    dirCount = (dirCount+floor(random(5)))%4;
   }
   for (int i = box.size()-1; i>=0; i--) {
     if (!box.get(i).checkAlive()) {
@@ -106,7 +106,7 @@ void gameController() {
 
   if (!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
     doCutting();
-  }else{
+  } else {
     box.get(box.size()-1).slideIn();
   }
 

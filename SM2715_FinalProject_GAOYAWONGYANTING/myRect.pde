@@ -17,7 +17,7 @@ class myRect {
   int lowMost = 600;
   int leftMost = 0;
   int rightMost = 600;
-  int speed = 1;
+  int speed = 2;
 
   //the constructor for the basic one
   myRect() {
@@ -65,7 +65,7 @@ class myRect {
 
   void slideIn() {
     if (theSlideOne) {
-      if (frameCount % 10 ==0) { 
+      if (frameCount % 8 ==0) { 
         speed = speed + a;
       }
       if (fromSide%2 == 1) {
