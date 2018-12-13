@@ -81,6 +81,18 @@ void checkOrigDelta() {
 void moveToZero() {
 }
 
+void fillGap(){
+   for (int i = 0;i < 4;i++){
+    for (int j = 4;j > i;j--) {
+      if (highScore[j] < highScore[j - 1]) {
+        float tmp = highScore[j];
+        highScore[j] = highScore[j - 1];
+        highScore[j - 1] = tmp;
+      }
+    }
+  }
+}
+
 
 //control the whole game flow
 void gameController() {
