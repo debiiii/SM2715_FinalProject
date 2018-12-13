@@ -2,8 +2,8 @@ class myRect {
   int rx;
   int ry;
   int a = 1;
-  //long side = 80
-  //short side = 10
+  //long side = cubeL
+  //short side = cubeS
   int rw;
   int rh;
   int dir;
@@ -23,8 +23,8 @@ class myRect {
   myRect() {
     rx = width/2;
     ry = height/2;
-    rw = 80;
-    rh = 80;
+    rw = cubeL;
+    rh = cubeL;
     c = color(62, 198, 172);
     isSliding = false;
     theSlideOne = false;
@@ -44,16 +44,16 @@ class myRect {
         ry = -cubeL/2;
       else
         ry = height + cubeL/2;
-      rw = 10;
-      rh = 80;
+      rw = cubeS;
+      rh = cubeL;
     } else {
       ry = inXY;
       if (fromSide == 1)
         rx = -cubeL/2;
       else
         rx = width + cubeL/2;
-      rw = 80;
-      rh = 10;
+      rw = cubeL;
+      rh = cubeS;
     }
 
     if (fromSide<2) {
@@ -65,7 +65,7 @@ class myRect {
 
   void slideIn() {
     if (theSlideOne) {
-      if (frameCount%6 ==0) { 
+      if (frameCount % 10 ==0) { 
         speed = speed + a;
       }
       if (fromSide%2 == 1) {

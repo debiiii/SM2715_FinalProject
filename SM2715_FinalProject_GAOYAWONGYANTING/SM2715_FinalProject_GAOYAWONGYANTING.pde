@@ -9,8 +9,8 @@
 
 //game flow
 boolean gameOver = false;
-int cubeL = 80;
-int cubeS = 10;
+int cubeL = 120;
+int cubeS = 18;
 ArrayList<myRect> box = new ArrayList<myRect>();
 
 //boundary
@@ -66,6 +66,9 @@ void updateBoundary() {
       }
     }
   }
+  fill(158,226,213);
+  rectMode(CORNERS);
+  rect(lBB,uBB,rBB,dBB);
 }
 
 void checkOrigDelta() {
@@ -90,7 +93,7 @@ void gameController() {
       addAt = dBB + cubeS/2;
       break;
     }
-    box.add(new myRect(dirCount, addAt, color(62, 198, 172, 200)));
+    box.add(new myRect(dirCount, addAt, color(158,226,213)));
     dirCount = (dirCount+1)%4;
   }
   for (int i = box.size()-1; i>=0; i--) {
