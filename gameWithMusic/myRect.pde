@@ -163,8 +163,6 @@ class myRect {
   }
 
   //move the whole shape to the center point
-  void backToOrig(int deltaX, int deltaY) {
-    rx += deltaX;
-    ry += deltaY;
+  void backToOrig(int deltaX, int deltaY) { 
   }
 }

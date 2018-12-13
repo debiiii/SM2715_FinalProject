@@ -9,6 +9,11 @@ int cubeL = 150;
 int cubeS = 20;
 ArrayList<myRect> box = new ArrayList<myRect>();
 float speedIndex=1;
+int xTo0 = 0;
+int yTo0 = 0;
+int moveBackSpdX = 1;
+int moveBackSpdY = 1;
+int stepCounter = 0;
 
 //boundary
 int lBB = 600;
@@ -32,8 +37,9 @@ void draw() {
   rect(0, 0, 600, 600);
 
   updateBoundary();
-  gameController();
   fillGap();
+  gameController(); 
+  moveToCenter();
   
 }
 
@@ -76,10 +82,23 @@ void updateBoundary() {
   //rect(lBB, uBB, rBB, dBB);
 }
 
-void checkOrigDelta() {
+void origData() {
+  xTo0 = 300-((rBB-lBB)/2 + lBB);
+  yTo0 = 300-((dBB-uBB)/2 + uBB);
+  
+  moveBackSpdX = xTo0/10;
+  moveBackSpdY = yTo0/10;  
+
 }
 
-void moveToZero() {
+void moveToCenter() {
+  if(stepCounter<10){
+    for (int i = 0; i<box.size(); i++) {  
+        box.get(i).rx += moveBackSpdX;
+        box.get(i).ry += moveBackSpdY;       
+    }
+  }
+  stepCounter += 1;
 }
 
 void fillGap(){
@@ -93,12 +112,10 @@ void fillGap(){
           fill(box.get(i).c);
           rect(floor(box.get(i).rightMost), floor(box.get(i).topMost),
           ceil(box.get(j).leftMost),  ceil(box.get(i).lowMost));
-          println("!!!!!!!!!!!!");
         }else{
           fill(box.get(j).c);
           rect(floor(box.get(i).rightMost), floor(box.get(j).topMost),
           ceil(box.get(j).leftMost),  ceil(box.get(j).lowMost));
-          println("!!!!!!!!!!!!");
         }
       }
       
@@ -108,12 +125,10 @@ void fillGap(){
           fill(box.get(i).c);
           rect(floor(box.get(i).leftMost), floor(box.get(i).lowMost),
           ceil(box.get(i).rightMost),  ceil(box.get(j).topMost));
-          println("!!!!!!!!!!!!");
         }else{
           fill(box.get(j).c);
           rect(box.get(j).leftMost, floor(box.get(i).lowMost),
           box.get(j).rightMost,  ceil(box.get(j).topMost));
-          println("!!!!!!!!!!!!");
         }
       }
       }
@@ -175,6 +190,8 @@ void gameController() {
   if (!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
     //if so, cut all the boxes accordingly
     doCutting();
+    origData();
+    stepCounter = 0;
     //play notes while do cuttings 
   } else {
     //keep sliding
@@ -246,9 +263,6 @@ void keyPressed() {
     noteCounter += 1;
     
 
-    //1。check if totally out of boundary
-    //2 check and cut 
-    //print("low: " + box.get(box.size()-1).lowMost + " ubb " + uBB);
     if (box.get(box.size()-1).leftMost > rBB 
       || box.get(box.size()-1).rightMost < lBB
       || box.get(box.size()-1).topMost > dBB
@@ -257,6 +271,7 @@ void keyPressed() {
       //play die animation
     } else {
       box.get(box.size()-1).theSlideOne = false;
+      
     }
   }
 }
