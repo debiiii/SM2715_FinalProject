@@ -104,7 +104,11 @@ void gameController(){
   }
   
   
-  box.get(box.size()-1).slideIn();    
+     
+  if(!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished){
+    doCutting();
+  }
+  box.get(box.size()-1).slideIn();
   
   for(int i = 0; i<box.size(); i++){
     if(box.get(i).checkAlive()){
@@ -113,23 +117,9 @@ void gameController(){
   }
 }
 
-void keyPressed(){
-  if(key == ' '){
-    box.get(box.size()-1).theSlideOne = false;
-    //1。check if totally out of boundary
-    //2 check and cut 
-    //print("low: " + box.get(box.size()-1).lowMost + " ubb " + uBB);
-    if(box.get(box.size()-1).leftMost > rBB 
-    || box.get(box.size()-1).rightMost < lBB
-    || box.get(box.size()-1).topMost > dBB
-    || box.get(box.size()-1).lowMost < uBB){
-      print("game over");
-      //play die animation
-    }else{
-      
-      updateBoundary();
-      int tempLB;
-      int tempHB;
+void doCutting(){
+  int tempLB;
+  int tempHB;
       if(box.get(box.size()-1).fromSide%2 == 1){
           
           if(box.get(box.size()-1).leftMost > lBB){
@@ -169,8 +159,23 @@ void keyPressed(){
           }
         }
         box.get(box.size()-1).isSliding = false;
-  
-      
+        box.get(box.size()-1).cutFinished = true;
+}
+
+void keyPressed(){
+  if(key == ' '){
+    
+    //1。check if totally out of boundary
+    //2 check and cut 
+    //print("low: " + box.get(box.size()-1).lowMost + " ubb " + uBB);
+    if(box.get(box.size()-1).leftMost > rBB 
+    || box.get(box.size()-1).rightMost < lBB
+    || box.get(box.size()-1).topMost > dBB
+    || box.get(box.size()-1).lowMost < uBB){
+      print("game over");
+      //play die animation
+    }else{
+      box.get(box.size()-1).theSlideOne = false;      
       
     }
     

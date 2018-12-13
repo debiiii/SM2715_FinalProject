@@ -12,6 +12,7 @@ class myRect{
   boolean isAlive = true;
   boolean isSliding = true; //if space, is sliding = false;
   boolean theSlideOne = true;
+  boolean cutFinished = false;
   int topMost = 0;
   int lowMost = 600;
   int leftMost = 0;
@@ -27,6 +28,7 @@ class myRect{
     c = color(62,198,172);
     isSliding = false;
     theSlideOne = false;
+    cutFinished = true;
     topMost = ry - rh/2;
     lowMost = ry + rh/2;
     leftMost = rx - rw/2;
