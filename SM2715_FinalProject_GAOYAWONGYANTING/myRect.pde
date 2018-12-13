@@ -1,6 +1,7 @@
 class myRect{
   int rx;
   int ry;
+  int a = 1;
   //long side = 80
   //short side = 10
   int rw;
@@ -14,6 +15,7 @@ class myRect{
   int lowMost = 600;
   int leftMost = 0;
   int rightMost = 600;
+  int speed = 1;
   
   //the constructor for the basic one
   myRect(){
@@ -59,6 +61,9 @@ class myRect{
   
   void slideIn(){
     if(isSliding){
+      if(frameCount%5 ==0){
+          speed = speed + a;
+      }
       if(fromSide%2 == 1){
         rx += dir * speed;
       }
@@ -73,10 +78,23 @@ class myRect{
     fill(c);
     rectMode(CENTER);
     rect(rx,ry,rw,rh);
+    topMost = ry - rh/2;
+    lowMost = ry + rh/2;
+    leftMost = rx - rw/2;
+    rightMost = rx + rw/2;
+  }
+  
+  void dieAnimate(){
   }
   
   boolean checkAlive(){
     if(rw <=0 || rh <=0){
+      isAlive = false;
+      return false;
+    }else if((leftMost > rBB && fromSide == 1)
+    || (rightMost < lBB && fromSide == 3)
+    || (topMost > dBB && fromSide == 0)
+    || (lowMost < uBB && fromSide == 2)){
       isAlive = false;
       return false;
     }
@@ -123,11 +141,8 @@ class myRect{
           ry -= delY;
           rh -= delY;       
         }
-      }
-      
-    }
-    
-    
+      }      
+    }   
   }
   
   //move the whole shape to the center point

@@ -9,7 +9,6 @@
 
 //game flow
 boolean gameOver = false;
-int speed = 2;
 int cubeL = 80;
 int cubeS = 10;
 ArrayList<myRect> box = new ArrayList<myRect>();
@@ -66,7 +65,6 @@ void updateBoundary(){
       uBB = box.get(i).topMost;
       println("ubb " + uBB);
     }
-
   }
 
   
@@ -74,7 +72,7 @@ void updateBoundary(){
 
 
 void gameController(){
-  if(frameCount % 600 == 1){
+  if(frameCount % 100 == 1){
     int addAt = 0;
     switch(dirCount){
       case 0:
@@ -113,5 +111,15 @@ void gameController(){
 
 void keyPressed(){
   if(key == ' '){
+    //1。check if totally out of boundary
+    //2 check and cut 
+    //print("low: " + box.get(box.size()-1).lowMost + " ubb " + uBB);
+    if(box.get(box.size()-1).leftMost > rBB 
+    || box.get(box.size()-1).rightMost < lBB
+    || box.get(box.size()-1).topMost > dBB
+    || box.get(box.size()-1).lowMost < uBB){
+      print("game over");
+    }
+    
   }
 }
