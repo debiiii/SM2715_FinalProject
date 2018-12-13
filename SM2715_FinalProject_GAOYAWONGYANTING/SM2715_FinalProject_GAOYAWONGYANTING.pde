@@ -1,17 +1,14 @@
-//array list for my Rect x
 //array list for my bee
-//function update boundary
 //bee fly - noise
 //bee tail -bimage get color
 //rect - gradient?
-//sound?
-//game controller - function
 
 //game flow
 boolean gameOver = false;
-int cubeL = 120;
-int cubeS = 18;
+int cubeL = 150;
+int cubeS = 20;
 ArrayList<myRect> box = new ArrayList<myRect>();
+float speedIndex=1;
 
 //boundary
 int lBB = 600;
@@ -38,34 +35,40 @@ void draw() {
   gameController();
 }
 
+//update the boundary for the whole box
 void updateBoundary() {
-  //reset
+  //reset the original values for the boundaries
   lBB = 600;
   rBB = 0;
   uBB = 600;
   dBB = 0;
 
+  //for all the boxes,except the one that is sliding
   for (int i = 0; i<box.size(); i++) {
     if (!box.get(i).isSliding) {
-      //lbb
+      //check lbb, if the left most value of the box is smaller than the lBB, update the lBB
       if (box.get(i).leftMost < lBB) {
         lBB = box.get(i).leftMost;
         //println("lbb " + lBB);
       }
+      //same as above
       if (box.get(i).rightMost > rBB) {
         rBB = box.get(i).rightMost;
         //println("rbb " + rBB);
       }
+      //same as above
       if (box.get(i).lowMost > dBB) {
         dBB = box.get(i).lowMost;
         //println("dbb " + dBB);
       }
+      //same as above
       if (box.get(i).topMost < uBB) {
         uBB = box.get(i).topMost;
         //println("ubb " + uBB);
       }
     }
   }
+  //draw a box with the same color at the back to fill up the blanks
   fill(158, 226, 213);
   rectMode(CORNERS);
   rect(lBB, uBB, rBB, dBB);
@@ -74,42 +77,70 @@ void updateBoundary() {
 void checkOrigDelta() {
 }
 
+void moveToZero() {
+}
 
+
+//control the whole game flow
 void gameController() {
-  if (frameCount % 100 == 1) {
+  //add one box to the screen in some frequency
+  if (floor(frameCount % 80*speedIndex) == 1) {
     int addAt = 0;
+    //generate the position of the sliding box
     switch(dirCount) {
     case 0:
-      //add possiblilty
-      addAt = rBB + cubeS/2;
+      //half chance from one side, half chance from the other
+      if (random(1)>0.5) {
+        addAt = rBB + cubeS/2;
+      } else {
+        addAt = lBB - cubeS/2;
+      }
       break;
     case 1:
-      addAt = uBB - cubeS/2;
+      if (random(1)>0.5) {
+        addAt = uBB - cubeS/2;
+      } else {
+        addAt = dBB + cubeS/2;
+      }
       break;
     case 2:
-      addAt = lBB - cubeS/2;
+      if (random(1)>0.5) {
+        addAt = rBB + cubeS/2;
+      } else {
+        addAt = lBB - cubeS/2;
+      }
       break;
     case 3:
-      addAt = dBB + cubeS/2;
+      if (random(1)>0.5) {
+        addAt = uBB - cubeS/2;
+      } else {
+        addAt = dBB + cubeS/2;
+      }
       break;
     }
+    //push one rect to the arraylist
     box.add(new myRect(dirCount, addAt, color(158, 226, 213)));
+    //update the adding direction for the next time
     dirCount = (dirCount+floor(random(5)))%4;
   }
+
+  //remove the ones that have no volume
   for (int i = box.size()-1; i>=0; i--) {
     if (!box.get(i).checkAlive()) {
       box.remove(i);
     }
   }
 
-
-
+  //check if the sliding box should be fixed
   if (!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
+    //if so, cut all the boxes accordingly
     doCutting();
   } else {
+    //keep sliding
     box.get(box.size()-1).slideIn();
   }
 
+  //diso=play all the boxes that are alive
   for (int i = 0; i<box.size(); i++) {
     if (box.get(i).checkAlive()) {
       box.get(i).display();
@@ -117,6 +148,7 @@ void gameController() {
   }
 }
 
+//cute all the boxes
 void doCutting() {
   int tempLB;
   int tempHB;
@@ -160,6 +192,8 @@ void doCutting() {
   box.get(box.size()-1).cutFinished = true;
 }
 
+
+//if spacebar is pressed, do...
 void keyPressed() {
   if (key == ' ') {
 
