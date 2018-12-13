@@ -10,6 +10,10 @@ class myRect{
   int fromSide; //0 = up, 1 = right, 2 = down; 3 = left
   boolean isAlive = true;
   boolean isSliding = true; //if space, is sliding = false;
+  int topMost = 0;
+  int lowMost = 600;
+  int leftMost = 0;
+  int rightMost = 600;
   
   //the constructor for the basic one
   myRect(){
@@ -62,7 +66,50 @@ class myRect{
     return true;
   }
   
-  void cutExtra(){
+  void cutExtra(boolean cutX, int lowerBond, int higherBond){
+        
+    if(cutX){
+      leftMost = rx - rw/2;
+      rightMost = rx + rw/2;
+      if(rightMost < lowerBond){
+        rw = 0;
+      }else if(leftMost > higherBond){
+        rw = 0;
+      }else{
+        if(leftMost < lowerBond){
+          int delX = abs(lowerBond - leftMost);
+          rx += delX/2;
+          rw -= delX;            
+        }
+        if(rightMost > higherBond){
+          int delX = abs(rightMost - higherBond);
+          rx -= delX;
+          rw -= delX;       
+        }
+      }     
+    }else{
+      topMost = ry - rh/2;
+      lowMost = ry + rh/2;
+      
+      if(topMost < lowerBond){
+        rh = 0;
+      }else if(lowMost > higherBond){
+        rh = 0;
+      }else{
+        if(topMost < lowerBond){
+          int delY = abs(lowerBond - topMost);
+          ry += delY/2;
+          rh -= delY;            
+        }
+        if(lowMost > higherBond){
+          int delY = abs(lowMost - higherBond);
+          ry -= delY;
+          rh -= delY;       
+        }
+      }
+      
+    }
+    
     
   }
   
