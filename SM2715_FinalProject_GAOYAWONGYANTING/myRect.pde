@@ -1,4 +1,4 @@
-class myRect{
+class myRect {
   int rx;
   int ry;
   int a = 1;
@@ -18,14 +18,14 @@ class myRect{
   int leftMost = 0;
   int rightMost = 600;
   int speed = 1;
-  
+
   //the constructor for the basic one
-  myRect(){
+  myRect() {
     rx = width/2;
     ry = height/2;
     rw = 80;
     rh = 80;
-    c = color(62,198,172);
+    c = color(62, 198, 172);
     isSliding = false;
     theSlideOne = false;
     cutFinished = true;
@@ -34,81 +34,80 @@ class myRect{
     leftMost = rx - rw/2;
     rightMost = rx + rw/2;
   }
-  
-  myRect(int from, int inXY, color fillc){
+
+  myRect(int from, int inXY, color fillc) {
     c = fillc;
     fromSide = from;
-    if(fromSide%2 == 0){
+    if (fromSide%2 == 0) {
       rx = inXY;
-      if(fromSide == 0)
-      ry = -cubeL/2;
+      if (fromSide == 0)
+        ry = -cubeL/2;
       else
-      ry = height + cubeL/2;
+        ry = height + cubeL/2;
       rw = 10;
-      rh = 80;           
-    }else{
+      rh = 80;
+    } else {
       ry = inXY;
-      if(fromSide == 1)
-      rx = -cubeL/2;
+      if (fromSide == 1)
+        rx = -cubeL/2;
       else
-      rx = width + cubeL/2;
+        rx = width + cubeL/2;
       rw = 80;
-      rh = 10;      
+      rh = 10;
     }
-    
-    if(fromSide<2){
-      dir = 1;      
-    }else{
+
+    if (fromSide<2) {
+      dir = 1;
+    } else {
       dir = -1;
-    }    
+    }
   }
-  
-  void slideIn(){
-    if(theSlideOne){
-      if(frameCount%5 ==0){ 
-          speed = speed + a;
+
+  void slideIn() {
+    if (theSlideOne) {
+      if (frameCount%6 ==0) { 
+        speed = speed + a;
       }
-      if(fromSide%2 == 1){
+      if (fromSide%2 == 1) {
         rx += dir * speed;
-      }
-      else{
+      } else {
         ry += dir * speed;
       }
     }
   }
-  
-  void display(){
+
+  void display() {
     noStroke();
     fill(c);
     rectMode(CENTER);
-    rect(rx,ry,rw,rh);
+    rect(rx, ry, rw, rh);
     topMost = ry - rh/2;
     lowMost = ry + rh/2;
     leftMost = rx - rw/2;
     rightMost = rx + rw/2;
   }
-  
-  void dieAnimate(){
+
+  void dieAnimate() {
     noStroke();
     int alp = 200;
-    fill(red(c),green(c),blue(c),alp);
+    fill(red(c), green(c), blue(c), alp);
     rectMode(CENTER);
-    rect(rx,ry,rw,rh);
+    rect(rx, ry, rw, rh);
     topMost = ry - rh/2;
     lowMost = ry + rh/2;
     leftMost = rx - rw/2;
     rightMost = rx + rw/2;
     alp -= 10;
   }
-  
-  boolean checkAlive(){
-    if(rw <=0 || rh <=0){
+
+  boolean checkAlive() {
+    if (rw <=0 || rh <=0) {
       isAlive = false;
       return false;
-    }else if((leftMost > rBB && fromSide == 1)
-    || (rightMost < lBB && fromSide == 3)
-    || (topMost > dBB && fromSide == 0)
-    || (lowMost < uBB && fromSide == 2)){
+    } else if ((leftMost > rBB && fromSide == 1)
+      || (rightMost < lBB && fromSide == 3)
+      || (topMost > dBB && fromSide == 0)
+      || (lowMost < uBB && fromSide == 2)) {
       isAlive = false;
       gameOver = true;
       //dieAnimate();
@@ -116,56 +115,56 @@ class myRect{
     }
     return true;
   }
-  
-  void cutExtra(boolean cutX, int lowerBond, int higherBond){
-        
-    if(cutX){
+
+  void cutExtra(boolean cutX, int lowerBond, int higherBond) {
+
+    if (cutX) {
       leftMost = rx - rw/2;
       rightMost = rx + rw/2;
-      if(rightMost < lowerBond){
+      if (rightMost < lowerBond) {
         rw = 0;
-      }else if(leftMost > higherBond){
+        //die
+      } else if (leftMost > higherBond) {
         rw = 0;
-      }else{
-        if(leftMost < lowerBond){
+        //die
+      } else {
+        if (leftMost < lowerBond) {
           int delX = abs(lowerBond - leftMost);
           rx += delX/2;
-          rw -= delX;            
+          rw -= delX;
         }
-        if(rightMost > higherBond){
+        if (rightMost > higherBond) {
           int delX = abs(rightMost - higherBond);
-          rx -= delX;
-          rw -= delX;       
+          rx -= delX/2;
+          rw -= delX;
         }
-      }     
-    }else{
+      }
+    } else {
       topMost = ry - rh/2;
       lowMost = ry + rh/2;
-      
-      if(lowMost < lowerBond){
+
+      if (lowMost < lowerBond) {
         rh = 0;
-      }else if(topMost > higherBond){
+      } else if (topMost > higherBond) {
         rh = 0;
-      }else{
-        if(topMost < lowerBond){
+      } else {
+        if (topMost < lowerBond) {
           int delY = abs(lowerBond - topMost);
           ry += delY/2;
-          rh -= delY;            
+          rh -= delY;
         }
-        if(lowMost > higherBond){
+        if (lowMost > higherBond) {
           int delY = abs(lowMost - higherBond);
-          ry -= delY;
-          rh -= delY;       
+          ry -= delY/2;
+          rh -= delY;
         }
-      }      
-    }   
+      }
+    }
   }
-  
+
   //move the whole shape to the center point
-  void backToOrig(int deltaX, int deltaY){
+  void backToOrig(int deltaX, int deltaY) {
     rx += deltaX;
     ry += deltaY;
   }
-    
-
 }
