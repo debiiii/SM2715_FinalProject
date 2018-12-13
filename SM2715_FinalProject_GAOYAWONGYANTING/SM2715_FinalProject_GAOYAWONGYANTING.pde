@@ -41,29 +41,26 @@ void draw(){
 }
 
 void updateBoundary(){
-  int upper = 1;
-  if(box.size() == 1){
-    upper = 1;
-  }else{
-    upper = box.size()-1;
-  }
-  for(int i = 0; i<upper; i++){
-    //lbb
-    if(box.get(i).leftMost < lBB){
-      lBB = box.get(i).leftMost;
-      println("lbb " + lBB);
-    }
-    if(box.get(i).rightMost > rBB){
-      rBB = box.get(i).rightMost;
-      println("rbb " + rBB);
-    }
-    if(box.get(i).lowMost < dBB){
-      dBB = box.get(i).lowMost;
-      println("dbb " + dBB);
-    }
-    if(box.get(i).topMost > uBB){
-      uBB = box.get(i).topMost;
-      println("ubb " + uBB);
+
+  for(int i = 0; i<box.size(); i++){
+    if(!box.get(i).isSliding){
+      //lbb
+      if(box.get(i).leftMost < lBB){
+        lBB = box.get(i).leftMost;
+        println("lbb " + lBB);
+      }
+      if(box.get(i).rightMost > rBB){
+        rBB = box.get(i).rightMost;
+        println("rbb " + rBB);
+      }
+      if(box.get(i).lowMost < dBB){
+        dBB = box.get(i).lowMost;
+        println("dbb " + dBB);
+      }
+      if(box.get(i).topMost > uBB){
+        uBB = box.get(i).topMost;
+        println("ubb " + uBB);
+      }
     }
   }
 
@@ -80,17 +77,18 @@ void gameController(){
       addAt = rBB + cubeS/2;
       break;
       case 1:
-      addAt = uBB + cubeS/2;
+      addAt = uBB - cubeS/2;
       break;
       case 2:
       addAt = lBB - cubeS/2;
       break;
       case 3:
-      addAt = dBB - cubeS/2;
+      addAt = dBB + cubeS/2;
       break;
             
     }
     box.add(new myRect(dirCount, addAt, color(62,198,172,200)));
+    dirCount = (dirCount+1)%4;
     
   }
   for(int i = box.size()-1; i>=0; i--){
@@ -119,6 +117,9 @@ void keyPressed(){
     || box.get(box.size()-1).topMost > dBB
     || box.get(box.size()-1).lowMost < uBB){
       print("game over");
+    }else{
+      box.get(box.size()-1).isSliding = false;
+      
     }
     
   }

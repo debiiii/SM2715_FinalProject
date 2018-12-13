@@ -85,6 +85,16 @@ class myRect{
   }
   
   void dieAnimate(){
+    noStroke();
+    int alp = 200;
+    fill(red(c),green(c),blue(c),alp);
+    rectMode(CENTER);
+    rect(rx,ry,rw,rh);
+    topMost = ry - rh/2;
+    lowMost = ry + rh/2;
+    leftMost = rx - rw/2;
+    rightMost = rx + rw/2;
+    alp -= 10;
   }
   
   boolean checkAlive(){
@@ -96,6 +106,8 @@ class myRect{
     || (topMost > dBB && fromSide == 0)
     || (lowMost < uBB && fromSide == 2)){
       isAlive = false;
+      gameOver = true;
+      //dieAnimate();
       return false;
     }
     return true;
