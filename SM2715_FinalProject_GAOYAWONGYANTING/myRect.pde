@@ -61,7 +61,7 @@ class myRect{
   
   void slideIn(){
     if(isSliding){
-      if(frameCount%5 ==0){
+      if(frameCount%3 ==0){
           speed = speed + a;
       }
       if(fromSide%2 == 1){

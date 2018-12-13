@@ -16,8 +16,8 @@ ArrayList<myRect> box = new ArrayList<myRect>();
 //boundary
 int lBB = 600;
 int rBB = 0;
-int uBB = 0;
-int dBB = 600;
+int uBB = 600;
+int dBB = 0;
 
 //test
 int dirCount = 0;
@@ -41,6 +41,11 @@ void draw(){
 }
 
 void updateBoundary(){
+  //reset
+  lBB = 600;
+  rBB = 0;
+  uBB = 600;
+  dBB = 0;
 
   for(int i = 0; i<box.size(); i++){
     if(!box.get(i).isSliding){
@@ -53,11 +58,11 @@ void updateBoundary(){
         rBB = box.get(i).rightMost;
         println("rbb " + rBB);
       }
-      if(box.get(i).lowMost < dBB){
+      if(box.get(i).lowMost > dBB){
         dBB = box.get(i).lowMost;
         println("dbb " + dBB);
       }
-      if(box.get(i).topMost > uBB){
+      if(box.get(i).topMost < uBB){
         uBB = box.get(i).topMost;
         println("ubb " + uBB);
       }
@@ -117,8 +122,10 @@ void keyPressed(){
     || box.get(box.size()-1).topMost > dBB
     || box.get(box.size()-1).lowMost < uBB){
       print("game over");
+      //play die animation
     }else{
       box.get(box.size()-1).isSliding = false;
+      updateBoundary();
       
     }
     
