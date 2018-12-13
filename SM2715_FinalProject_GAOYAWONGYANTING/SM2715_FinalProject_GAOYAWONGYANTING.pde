@@ -52,24 +52,25 @@ void updateBoundary(){
       //lbb
       if(box.get(i).leftMost < lBB){
         lBB = box.get(i).leftMost;
-        println("lbb " + lBB);
+        //println("lbb " + lBB);
       }
       if(box.get(i).rightMost > rBB){
         rBB = box.get(i).rightMost;
-        println("rbb " + rBB);
+        //println("rbb " + rBB);
       }
       if(box.get(i).lowMost > dBB){
         dBB = box.get(i).lowMost;
-        println("dbb " + dBB);
+        //println("dbb " + dBB);
       }
       if(box.get(i).topMost < uBB){
         uBB = box.get(i).topMost;
-        println("ubb " + uBB);
+        //println("ubb " + uBB);
       }
     }
-  }
+  }  
+}
 
-  
+void checkOrigDelta(){
 }
 
 
@@ -102,9 +103,9 @@ void gameController(){
     }
   }
   
-  for(int i = box.size()-1; i>=0; i--){
-     box.get(i).slideIn();    
-  }
+  
+  box.get(box.size()-1).slideIn();    
+  
   for(int i = 0; i<box.size(); i++){
     if(box.get(i).checkAlive()){
       box.get(i).display();
@@ -114,6 +115,7 @@ void gameController(){
 
 void keyPressed(){
   if(key == ' '){
+    box.get(box.size()-1).theSlideOne = false;
     //1。check if totally out of boundary
     //2 check and cut 
     //print("low: " + box.get(box.size()-1).lowMost + " ubb " + uBB);
@@ -124,8 +126,51 @@ void keyPressed(){
       print("game over");
       //play die animation
     }else{
-      box.get(box.size()-1).isSliding = false;
+      
       updateBoundary();
+      int tempLB;
+      int tempHB;
+      if(box.get(box.size()-1).fromSide%2 == 1){
+          
+          if(box.get(box.size()-1).leftMost > lBB){
+            tempLB = box.get(box.size()-1).leftMost;
+          }else{
+            tempLB = lBB;
+          }
+          
+          if(box.get(box.size()-1).rightMost < rBB){
+            tempHB = box.get(box.size()-1).rightMost;
+          }else{
+            tempHB = rBB;
+          }
+          for(int i = 0; i<box.size(); i++){
+            box.get(i).cutExtra(true, tempLB, tempHB);      
+          }
+                             
+        }
+        else{
+          if(box.get(box.size()-1).topMost > uBB){
+            tempLB = box.get(box.size()-1).topMost;
+          }else{
+            tempLB = uBB;
+          }
+          
+          if(box.get(box.size()-1).lowMost < dBB){
+            tempHB = box.get(box.size()-1).lowMost;
+          }else{
+            tempHB = dBB;            
+          }
+          println("low " + box.get(box.size()-1).lowMost);
+          println("dBB " + dBB);
+          println("the new tempHB " + tempHB);
+                   
+          for(int i = 0; i<box.size(); i++){
+            box.get(i).cutExtra(false, tempLB, tempHB);      
+          }
+        }
+        box.get(box.size()-1).isSliding = false;
+  
+      
       
     }
     

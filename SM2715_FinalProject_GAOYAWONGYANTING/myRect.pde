@@ -11,6 +11,7 @@ class myRect{
   int fromSide; //0 = up, 1 = right, 2 = down; 3 = left
   boolean isAlive = true;
   boolean isSliding = true; //if space, is sliding = false;
+  boolean theSlideOne = true;
   int topMost = 0;
   int lowMost = 600;
   int leftMost = 0;
@@ -25,6 +26,7 @@ class myRect{
     rh = 80;
     c = color(62,198,172);
     isSliding = false;
+    theSlideOne = false;
     topMost = ry - rh/2;
     lowMost = ry + rh/2;
     leftMost = rx - rw/2;
@@ -60,8 +62,8 @@ class myRect{
   }
   
   void slideIn(){
-    if(isSliding){
-      if(frameCount%3 ==0){
+    if(theSlideOne){
+      if(frameCount%5 ==0){ 
           speed = speed + a;
       }
       if(fromSide%2 == 1){
@@ -138,9 +140,9 @@ class myRect{
       topMost = ry - rh/2;
       lowMost = ry + rh/2;
       
-      if(topMost < lowerBond){
+      if(lowMost < lowerBond){
         rh = 0;
-      }else if(lowMost > higherBond){
+      }else if(topMost > higherBond){
         rh = 0;
       }else{
         if(topMost < lowerBond){
@@ -162,10 +164,6 @@ class myRect{
     rx += deltaX;
     ry += deltaY;
   }
-  
-  
-  
-  
-  
+    
 
 }
