@@ -25,7 +25,7 @@ class myRect {
     ry = height/2;
     rw = cubeL;
     rh = cubeL;
-    c = color(62, 198, 172);
+    c = color(249,139,127);
     isSliding = false;
     theSlideOne = false;
     cutFinished = true;

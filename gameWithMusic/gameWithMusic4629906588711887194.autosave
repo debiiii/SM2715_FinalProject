@@ -33,7 +33,6 @@ void draw() {
 
   updateBoundary();
   gameController();
-  fillGap();
   
 }
 
@@ -71,9 +70,9 @@ void updateBoundary() {
     }
   }
   //draw a box with the same color at the back to fill up the blanks
-  //fill(158, 226, 213);
-  //rectMode(CORNERS);
-  //rect(lBB, uBB, rBB, dBB);
+  fill(158, 226, 213);
+  rectMode(CORNERS);
+  rect(lBB, uBB, rBB, dBB);
 }
 
 void checkOrigDelta() {
@@ -83,43 +82,16 @@ void moveToZero() {
 }
 
 void fillGap(){
-  for(int i = 0; i<box.size(); i++){
-    for(int j = 0; j<box.size(); j++){
-      if(i!=j && !box.get(i).theSlideOne && !box.get(j).theSlideOne){
-      if(abs(box.get(i).rightMost - box.get(j).leftMost)<=5){
-        
-        rectMode(CORNERS);
-        if(box.get(i).rh < box.get(j).rh){   
-          fill(box.get(i).c);
-          rect(floor(box.get(i).rightMost), floor(box.get(i).topMost),
-          ceil(box.get(j).leftMost),  ceil(box.get(i).lowMost));
-          println("!!!!!!!!!!!!");
-        }else{
-          fill(box.get(j).c);
-          rect(floor(box.get(i).rightMost), floor(box.get(j).topMost),
-          ceil(box.get(j).leftMost),  ceil(box.get(j).lowMost));
-          println("!!!!!!!!!!!!");
-        }
-      }
-      
-      if(abs(box.get(i).lowMost - box.get(j).topMost)<=5){
-        rectMode(CORNERS);
-        if(box.get(i).rw < box.get(j).rw){   
-          fill(box.get(i).c);
-          rect(floor(box.get(i).leftMost), floor(box.get(i).lowMost),
-          ceil(box.get(i).rightMost),  ceil(box.get(j).topMost));
-          println("!!!!!!!!!!!!");
-        }else{
-          fill(box.get(j).c);
-          rect(box.get(j).leftMost, floor(box.get(i).lowMost),
-          box.get(j).rightMost,  ceil(box.get(j).topMost));
-          println("!!!!!!!!!!!!");
-        }
-      }
+   for (int i = 0; i<box.size(); i++){
+    for (int j = i+1; i<box.size(); j++) {
+      if (abs(box.get(i).rightMost - box.get(i).leftMost)<1) {
+        if(
+
       }
     }
   }
 }
+
 
 //control the whole game flow
 void gameController() {
@@ -159,7 +131,7 @@ void gameController() {
       break;
     }
     //push one rect to the arraylist
-    box.add(new myRect(dirCount, addAt, color(floor(random(158)), 226, 213)));
+    box.add(new myRect(dirCount, addAt, color(158, 226, 213)));
     //update the adding direction for the next time
     dirCount = (dirCount+floor(random(5)))%4;
   }
@@ -244,7 +216,6 @@ void keyPressed() {
     sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
     sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
     noteCounter += 1;
-    
 
     //1。check if totally out of boundary
     //2 check and cut 
