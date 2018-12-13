@@ -84,7 +84,7 @@ void moveToZero() {
 //control the whole game flow
 void gameController() {
   //add one box to the screen in some frequency
-  if (floor(frameCount % 80*speedIndex) == 1) {
+  if (floor(frameCount % 60*speedIndex) == 1) {
     int addAt = 0;
     //generate the position of the sliding box
     switch(dirCount) {
@@ -135,6 +135,7 @@ void gameController() {
   if (!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
     //if so, cut all the boxes accordingly
     doCutting();
+    //play notes while do cuttings 
   } else {
     //keep sliding
     box.get(box.size()-1).slideIn();
@@ -196,6 +197,7 @@ void doCutting() {
 //if spacebar is pressed, do...
 void keyPressed() {
   if (key == ' ') {
+    //play note also okay
 
     //1。check if totally out of boundary
     //2 check and cut 

@@ -10,7 +10,7 @@ SoundCipher sc5 = new SoundCipher(this);
 int timeStamp = 0;
 boolean canPlay = false;
 
-int noteCounter = 2067;
+int noteCounter = 0;
 
 int[][] note = { {48, 0, 0, 0, 0},
                  {48, 52, 0, 0, 0},
@@ -400,20 +400,22 @@ void draw() {
   //println(noteCounter);
   println(note.length);
   if(millis() - timeStamp > 500 && canPlay){
-    sc.playNote(note[noteCounter%note.length][0], 100, 1.0);
-    sc2.playNote(note[noteCounter%note.length][1], 100, 4.0);
-    sc3.playNote(note[noteCounter%note.length][2], 100, 4.0);
-    sc4.playNote(note[noteCounter%note.length][3], 100, 1.0);
-    sc5.playNote(note[noteCounter%note.length][4], 100, 0.2);
+    sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+    sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
+    sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
+    sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+    sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
     noteCounter += 1;
     timeStamp = millis();
   }
 }
 
 void mousePressed(){
-  sc.playNote(note[noteCounter%note.length][0], 100, 1.0);
-  sc2.playNote(note[noteCounter%note.length][1], 100, 1.0);
-  sc3.playNote(note[noteCounter%note.length][2], 100, 1.0);
+  sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+  sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 1.0);
+  sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 1.0);
+  sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+  sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
   noteCounter += 1;
 }
 
