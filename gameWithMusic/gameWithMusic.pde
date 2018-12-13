@@ -24,10 +24,30 @@ int dBB = 0;
 //test
 int dirCount = 0;
 
+//bee
+String[] beePicName = {"bee1.png", "bee2.png", "bee3.png", "bee4.png"};
+PImage[] beePic = new PImage[beePicName.length];
+int beePicCounter = 0;
+int beePicTimeStamp = 0;
+
+float beeX;
+float beeY;
+
+ArrayList<PVector> beePrevPt = new ArrayList<PVector>();
+int beeTailTimeStamp = 0;
+
+float beeTime = 0.0;
+float beeTimeIncrease = 0.008;
+
 void setup() {
   size(600, 600);
   background(255);
   box.add(new myRect());
+  
+  //bee
+  for(int i = 0; i < beePicName.length; i++){
+    beePic[i] = loadImage(beePicName[i]);
+  }
 }
 
 void draw() { 
@@ -40,6 +60,7 @@ void draw() {
   fillGap();
   gameController(); 
   moveToCenter();
+  drawBee();
   
 }
 
@@ -248,6 +269,54 @@ void doCutting() {
   }
   box.get(box.size()-1).isSliding = false;
   box.get(box.size()-1).cutFinished = true;
+}
+
+void drawBee(){
+  //bee X, Y pos
+  float tempX = noise(beeTime);
+  beeX = map(tempX, 0, 1, lBB, rBB);
+  float tempY = noise(beeTime + 150);
+  beeY = map(tempY, 0, 1, uBB, dBB);
+  
+  //bee tail pos
+  if(millis() - beeTailTimeStamp > 600){
+    beePrevPt.add(new PVector(beeX, beeY, 0));
+    beeTailTimeStamp = millis();
+  }
+  
+  //only keeping 15 point for bee tail
+  if(beePrevPt.size() > 15){
+      beePrevPt.remove(0);
+   }
+   
+  //draw bee tail
+  for(int i = 0; i < beePrevPt.size(); i++){
+    PVector pt = beePrevPt.get(i);
+    //fill(249, 139, 127, i * 30);
+    fill(255, i * 30);
+    ellipse(pt.x, pt.y, 5, 5);
+  }
+
+  //draw bee pic animation
+  imageMode(CENTER);
+  image(beePic[beePicCounter%beePicName.length], beeX, beeY, 30, 30);
+  if(millis() - beePicTimeStamp > 100){
+    beePicCounter += 1; 
+    beePicTimeStamp = millis();
+  }
+  
+  //bee flying noise 
+  beeTime += beeTimeIncrease;
+  
+  //gameover when the tail is cutted
+  for(int i = 0; i < beePrevPt.size(); i++){
+    PVector pt = beePrevPt.get(i);
+    if(pt.x < lBB || pt.x > rBB || pt.y < uBB || pt.y > dBB){
+      gameOver = true;
+      print("game over");
+    }
+  }
+  
 }
 
 
