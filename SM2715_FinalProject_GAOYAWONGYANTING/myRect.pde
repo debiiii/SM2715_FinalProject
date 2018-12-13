@@ -23,6 +23,10 @@ class myRect{
     rh = 80;
     c = color(62,198,172);
     isSliding = false;
+    topMost = ry - rh/2;
+    lowMost = ry + rh/2;
+    leftMost = rx - rw/2;
+    rightMost = rx + rw/2;
   }
   
   myRect(int from, int inXY, color fillc){
@@ -30,10 +34,18 @@ class myRect{
     fromSide = from;
     if(fromSide%2 == 0){
       rx = inXY;
+      if(fromSide == 0)
+      ry = -cubeL/2;
+      else
+      ry = height + cubeL/2;
       rw = 10;
       rh = 80;           
     }else{
       ry = inXY;
+      if(fromSide == 1)
+      rx = -cubeL/2;
+      else
+      rx = width + cubeL/2;
       rw = 80;
       rh = 10;      
     }
@@ -47,7 +59,12 @@ class myRect{
   
   void slideIn(){
     if(isSliding){
-      rx += dir * speed;
+      if(fromSide%2 == 1){
+        rx += dir * speed;
+      }
+      else{
+        ry += dir * speed;
+      }
     }
   }
   
