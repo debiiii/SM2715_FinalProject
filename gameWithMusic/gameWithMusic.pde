@@ -51,7 +51,7 @@ int beeParticlesCounter = 200;
 void setup() {
   size(600, 600);
   img = loadImage("bg03.png");
-  font = createFont("UniSansThin.otf", 32,true);
+  font = createFont("UniSansThin.otf", 32, true);
   //loadFont("UniSansThin.otf");
   background(255);
   box.add(new myRect());  
@@ -60,7 +60,7 @@ void setup() {
   for (int i = 0; i < beePicName.length; i++) {
     beePic[i] = loadImage(beePicName[i]);
   }
-  
+
   //bee particle
   beeParticles = new ArrayList<particle>();
 }
@@ -72,39 +72,38 @@ void draw() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  drawDecos();
-  updateBoundary();
-  fillGap();
-  gameController(); 
+  drawDecos();  
+  if (!gameOver) {
+    updateBoundary();
+    gameController();
+  }
   moveToCenter();
-  if(!gameOver){
+  if (!gameOver) {
     updateBeePos();
   }
+  fillGap();
+  displayAlive();
   drawBee();
   checkBeeDie();
-  
+
   //show score
   fill(249, 139, 127);
-  textFont(font,15);
+  textFont(font, 15);
   String scoreTxt = nf(myScore, 5);
   text("Score: " + scoreTxt, 20, 35); 
-  
+
   //show HP Bar
-  
-  
-  
-  
 }
 
-void drawDecos(){
-  
+void drawDecos() {
+
   for (int i = deco.size()-1; i>=0; i--) {
     if (deco.get(i).finished == true) {
       deco.remove(i);
     }
   }
-  
-  for(int i = 0; i<deco.size(); i++){
+
+  for (int i = 0; i<deco.size(); i++) {
     deco.get(i).wave();
   }
 }
@@ -205,10 +204,16 @@ void fillGap() {
   }
 }
 
+void checkFirstDeath() {
+  if (!box.get(0).isAlive) {
+    gameOver = true;
+  }
+}
+
 //control the whole game flow
 void gameController() {
   //add one box to the screen in some frequency
-  if(frameCount%600 == 0 && frameCount <= 18000){
+  if (frameCount%600 == 0 && frameCount <= 18000) {
     speedIndex-=0.02;
     smallSpd += 1;
   }
@@ -270,7 +275,9 @@ void gameController() {
     //keep sliding
     box.get(box.size()-1).slideIn();
   }
+}
 
+void displayAlive() {
   //diso=play all the boxes that are alive
   for (int i = 0; i<box.size(); i++) {
     if (box.get(i).checkAlive()) {
@@ -299,12 +306,11 @@ void doCutting() {
     for (int i = 0; i<box.size(); i++) {
       box.get(i).cutExtra(true, tempLB, tempHB);
     }
-    
+
     //check bee x out of cutting lines
-    if(beeX < tempLB || beeX > tempHB){
+    if (beeX < tempLB || beeX > tempHB) {
       gameOver = true;
     }
-    
   } else {
     if (box.get(box.size()-1).topMost > uBB) {
       tempLB = box.get(box.size()-1).topMost;
@@ -324,18 +330,17 @@ void doCutting() {
     for (int i = 0; i<box.size(); i++) {
       box.get(i).cutExtra(false, tempLB, tempHB);
     }
-    
+
     //check bee y out of cutting lines
-    if(beeY < tempLB || beeY > tempHB){
+    if (beeY < tempLB || beeY > tempHB) {
       gameOver = true;
     }
-    
   }
   box.get(box.size()-1).isSliding = false;
   box.get(box.size()-1).cutFinished = true;
 }
 
-void updateBeePos(){
+void updateBeePos() {
   //bee X, Y pos
   float tempX = noise(beeTime);
   beeX = map(tempX, 0, 1, lBB, rBB);
@@ -352,14 +357,13 @@ void updateBeePos(){
   if (beePrevPt.size() > 10) {
     beePrevPt.remove(0);
   }
-  
+
   //bee flying noise 
   beeTime += beeTimeIncrease;
-  
 }
 
 void drawBee() {
-  
+
   //draw bee tail
   for (int i = 0; i < beePrevPt.size(); i++) {
     PVector pt = beePrevPt.get(i);
@@ -377,25 +381,23 @@ void drawBee() {
     beePicCounter += 1; 
     beePicTimeStamp = millis();
   }
- 
 }
 
-void drawBeeParticle(){
-    
-   beeParticles.add(new particle(new PVector(beeX,beeY)));
-   
-   for(int i = 0; i < beeParticles.size(); i++){
+void drawBeeParticle() {
+
+  beeParticles.add(new particle(new PVector(beeX, beeY)));
+
+  for (int i = 0; i < beeParticles.size(); i++) {
     particle p = beeParticles.get(i);
     p.play();
-    if(p.isDead()){
+    if (p.isDead()) {
       beeParticles.remove(i);
     }
   }
-  
 }
 
-void checkBeeDie(){
-  
+void checkBeeDie() {
+
   //when the tail is outside boundry
   for (int i = 0; i < beePrevPt.size(); i++) {
     PVector pt = beePrevPt.get(i);
@@ -403,45 +405,47 @@ void checkBeeDie(){
       beePrevPt.remove(i);
     }
   }
-  
-  if(gameOver){
+
+  if (gameOver) {
     beePicAlpha -= 2;
     beeTailAlpha -= 5;
-    if(beeParticlesCounter > 0){
+    if (beeParticlesCounter > 0) {
       drawBeeParticle();
-     }
-     beeParticlesCounter--;
+    }
+    beeParticlesCounter--;
   }
 }
 
 
 //if spacebar is pressed, do...
 void keyPressed() {
-  if (key == ' ') {
-    //play note also okay
-    sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
-    sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
-    sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
-    sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
-    sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
-    noteCounter += 1;
-    //add note effect
-    for(int i = 0; i < 5; i++){
-      if(note[noteCounter][i] != 0){
-        deco.add(new myDeco(note[noteCounter][i],5,1));
-        deco.add(new myDeco(90,5,1));
+  if (!gameOver) {
+    if (key == ' ') {
+      //play note also okay
+      sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+      sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
+      sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
+      sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+      sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
+      noteCounter += 1;
+      //add note effect
+      for (int i = 0; i < 5; i++) {
+        if (note[noteCounter][i] != 0) {
+          deco.add(new myDeco(note[noteCounter][i], 5, 1));
+          deco.add(new myDeco(90, 5, 1));
+        }
+      }   
+
+
+      if (box.get(box.size()-1).leftMost > rBB 
+        || box.get(box.size()-1).rightMost < lBB
+        || box.get(box.size()-1).topMost > dBB
+        || box.get(box.size()-1).lowMost < uBB) {
+        print("game over");
+        //play die animation
+      } else {
+        box.get(box.size()-1).theSlideOne = false;
       }
-    }   
-
-
-    if (box.get(box.size()-1).leftMost > rBB 
-      || box.get(box.size()-1).rightMost < lBB
-      || box.get(box.size()-1).topMost > dBB
-      || box.get(box.size()-1).lowMost < uBB) {
-      print("game over");
-      //play die animation
-    } else {
-      box.get(box.size()-1).theSlideOne = false;
     }
   }
 }
