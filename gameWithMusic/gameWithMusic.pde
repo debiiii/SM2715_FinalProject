@@ -135,23 +135,26 @@ void drawEnding() {
   for (int i = 0; i<endDeco.size(); i++) {
     endDeco.get(i).wave();
   }  
-  
+
   fill(255);
   textFont(font, 50);
   textAlign(CENTER, CENTER);
   text(myScore, width/2, 100); 
 
-  for (int i = 0; i<5; i++) {
+  for (int i = 0; i<5; i++) {   
     noStroke();
-    fill(0,150);
+    fill(0, 150);
+    if (onList && i == listPos) {
+      fill(17, 122, 131, 150);
+    }
     rectMode(CENTER);
-    rect(width/2, 205+ i*60 , 250, 40, 10);
+    rect(width/2, 205+ i*60, 250, 40, 10);
     //fill(249, 139, 127);
     fill(255);
     textFont(font, 15);
     textAlign(CENTER, CENTER);
     String scoreTxt = nf(myScore, 5);
-    text("RANKING No." + i + "            " + nf(Integer.parseInt(highScore[i]), 5), width/2, 205+ i*60); 
+    text("RANKING No." + (i+1) + "            " + nf(Integer.parseInt(highScore[i]), 5), width/2, 205+ i*60);
   }
 }
 
