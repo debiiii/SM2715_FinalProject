@@ -15,6 +15,9 @@ int moveBackSpdX = 1;
 int moveBackSpdY = 1;
 int stepCounter = 0;
 
+//Visual effect
+PImage img;
+
 //boundary
 int lBB = 600;
 int rBB = 0;
@@ -41,6 +44,7 @@ float beeTimeIncrease = 0.008;
 
 void setup() {
   size(600, 600);
+  img = loadImage("bg3.png");
   background(255);
   box.add(new myRect());
   
@@ -104,16 +108,20 @@ void updateBoundary() {
 }
 
 void origData() {
-  xTo0 = 300-((rBB-lBB)/2 + lBB);
-  yTo0 = 300-((dBB-uBB)/2 + uBB);
   
-  moveBackSpdX = xTo0/10;
-  moveBackSpdY = yTo0/10;  
+  xTo0 = width/2-((rBB-lBB)/2 + lBB);
+  yTo0 = height/2-((dBB-uBB)/2 + uBB);
+  println("center: "+ ((rBB-lBB)/2 + lBB)+ " x: " + xTo0 + " ,y: " + yTo0);
+  
+  
+  moveBackSpdX = xTo0/8;
+  moveBackSpdY = yTo0/8;  
 
 }
 
 void moveToCenter() {
-  if(stepCounter<10){
+  origData();
+  if(stepCounter<16){
     for (int i = 0; i<box.size(); i++) {  
         box.get(i).rx += moveBackSpdX;
         box.get(i).ry += moveBackSpdY;       
@@ -211,9 +219,9 @@ void gameController() {
   if (!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
     //if so, cut all the boxes accordingly
     doCutting();
-    origData();
+    //origData();
     stepCounter = 0;
-    //play notes while do cuttings 
+    
   } else {
     //keep sliding
     box.get(box.size()-1).slideIn();
@@ -284,8 +292,8 @@ void drawBee(){
     beeTailTimeStamp = millis();
   }
   
-  //only keeping 15 point for bee tail
-  if(beePrevPt.size() > 15){
+  //only keeping 10 point for bee tail
+  if(beePrevPt.size() > 10){
       beePrevPt.remove(0);
    }
    
@@ -293,7 +301,8 @@ void drawBee(){
   for(int i = 0; i < beePrevPt.size(); i++){
     PVector pt = beePrevPt.get(i);
     //fill(249, 139, 127, i * 30);
-    fill(255, i * 30);
+    //fill(255, i * 30);
+    fill(img.get(floor(pt.x), floor(pt.y)), i * 30);
     ellipse(pt.x, pt.y, 5, 5);
   }
 
@@ -313,7 +322,7 @@ void drawBee(){
     PVector pt = beePrevPt.get(i);
     if(pt.x < lBB || pt.x > rBB || pt.y < uBB || pt.y > dBB){
       gameOver = true;
-      print("game over");
+      //print("game over");
     }
   }
   
