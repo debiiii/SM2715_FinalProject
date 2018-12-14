@@ -20,9 +20,9 @@ PImage img;
 ArrayList<myDeco> deco = new ArrayList<myDeco>();
 
 //boundary
-int lBB = 600;
+int lBB = width;
 int rBB = 0;
-int uBB = 600;
+int uBB = height;
 int dBB = 0;
 
 //test
@@ -59,7 +59,7 @@ void draw() {
   noStroke();
   fill(255);
   rectMode(CORNER);
-  rect(0, 0, 600, 600);
+  rect(0, 0, width, height);
 
   drawDecos();
   updateBoundary();
@@ -68,7 +68,7 @@ void draw() {
   moveToCenter();
   drawBee();
   
-  deco.add(new myDeco(70));
+  
   
         
 
@@ -76,6 +76,7 @@ void draw() {
 }
 
 void drawDecos(){
+  
   for (int i = deco.size()-1; i>=0; i--) {
     if (deco.get(i).finished == true) {
       deco.remove(i);
@@ -90,9 +91,9 @@ void drawDecos(){
 //update the boundary for the whole box
 void updateBoundary() {
   //reset the original values for the boundaries
-  lBB = 600;
+  lBB = width;
   rBB = 0;
-  uBB = 600;
+  uBB = height;
   dBB = 0;
 
   //for all the boxes,except the one that is sliding
@@ -234,7 +235,7 @@ void gameController() {
   }
 
   //check if the sliding box should be fixed
-  if (!box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
+  if (box.size()>0 && !box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
     //if so, cut all the boxes accordingly
     doCutting();
     //origData();
@@ -355,6 +356,13 @@ void keyPressed() {
     sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
     sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
     noteCounter += 1;
+    //add note effect
+    for(int i = 0; i < 5; i++){
+      if(note[noteCounter][i] != 0){
+        deco.add(new myDeco(note[noteCounter][i],5,1));
+        deco.add(new myDeco(90,5,1));
+      }
+    }   
 
 
     if (box.get(box.size()-1).leftMost > rBB 
