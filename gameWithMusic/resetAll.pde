@@ -50,6 +50,8 @@ void resetAll() {
   for (int i = 0; i < beePicName.length; i++) {
     beePic[i] = loadImage(beePicName[i]);
   }
+  onList = false; 
+  listPos = 5;
 
   gameOver = false;
   openScreen = true;

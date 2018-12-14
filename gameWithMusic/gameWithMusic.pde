@@ -215,6 +215,11 @@ void drawEnding() {
     String scoreTxt = nf(myScore, 5);
     text("RANKING No." + (i+1) + "            " + nf(Integer.parseInt(highScore[i]), 5), width/2, 205+ i*60);
   }
+  
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textFont(font, 16);
+  text("--  (R)estart  --", width/2, height - 80);
 }
 
 
