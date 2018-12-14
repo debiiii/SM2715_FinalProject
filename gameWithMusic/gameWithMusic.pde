@@ -22,6 +22,8 @@ int smallSpd = 2;
 boolean endScreen = false;
 boolean cPlayed = false;
 boolean useKeyboard = true;
+boolean openScreen = true;
+boolean startedRecording = false;
 
 //Visual effect
 PImage img;
@@ -61,6 +63,13 @@ ArrayList<particle> beeParticles;
 boolean getBeePosDone = false;
 int beeParticlesCounter = 150;
 
+//opening
+int openingCounter = 0;
+int openingTimeStamp = 0;
+float openingT = 0.0;
+float openingTIncrease = 0.004;
+float openingBeeX, openingBeeY;
+
 void setup() {
   size(600, 600);
   img = loadImage("bg03.png");
@@ -89,30 +98,66 @@ void draw() {
   rectMode(CORNER);
   rect(0, 0, width, height);
 
-  drawDecos();  
-  if (!gameOver) {
-    updateBoundary();
-    gameController();
-  }
-  moveToCenter();
-  if (!gameOver) {
-    updateBeePos();
-  }
-  fillGap();
-  displayAlive();
-  drawBee();
-  checkBeeDie();
+  if (openScreen) {
+    drawOpening();
+  } else {
+    drawDecos();  
+    if (!gameOver) {
+      updateBoundary();
+      gameController();
+    }
+    moveToCenter();
+    if (!gameOver) {
+      updateBeePos();
+    }
+    fillGap();
+    displayAlive();
+    drawBee();
+    checkBeeDie();
 
-  //show score
-  fill(249, 139, 127);
-  textFont(font, 15);
-  textAlign(CENTER);
-  String scoreTxt = nf(myScore, 5);
-  text("Score: " + scoreTxt, 60, 35); 
+    //show score
+    fill(249, 139, 127);
+    textFont(font, 15);
+    textAlign(CENTER);
+    String scoreTxt = nf(myScore, 5);
+    text("Score: " + scoreTxt, 60, 35); 
 
-  if (endScreen) {
-    drawEnding();
+    if (endScreen) {
+      drawEnding();
+    }
   }
+}
+
+void drawOpening() {
+  noStroke();
+  fill(50, endAlpha);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+  if (endAlpha<255) {
+    endAlpha += 30;
+  } else {
+    endAlpha = 255;
+  }
+
+  fill(255);
+  textFont(font, 50);
+  textAlign(CENTER, CENTER);
+  text("BeeCut", width/2, height/2 - 150);
+
+  textFont(font, 20);
+  text("--  (K)keyboard /  (V)Voice  --", width/2, height - 100);
+
+  float tempX = noise(openingT);
+  openingBeeX = map(tempX, 0, 1, width/2 - 100, width/2 + 100);
+  float tempY = noise(openingT + 150);
+  openingBeeY = map(tempY, 0, 1, height/2 - 100, height/2 + 100);
+
+  image(beePic[openingCounter%beePicName.length], openingBeeX, openingBeeY, 50, 50);
+  if (millis() - openingTimeStamp > 100) {
+    openingCounter += 1; 
+    openingTimeStamp = millis();
+  }
+  openingT += openingTIncrease;
 }
 
 void drawEnding() {
@@ -488,12 +533,71 @@ void checkBeeDie() {
 }
 
 
-void voiceControl(){
+void voiceControl() {
+  if (!useKeyboard) {
+    if (rms.analyze()>0.2) {
+
+
+
+      println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+
+
+
+      if (!gameOver) {
+        if (key == ' ') {
+          //play note also okay
+          sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+          sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
+          sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
+          sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+          sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
+          noteCounter += 1;
+          //add note effect
+          for (int i = 0; i < 5; i++) {
+            if (note[noteCounter][i] != 0) {
+              deco.add(new myDeco(note[noteCounter][i], 5, 1));
+              deco.add(new myDeco(90, 5, 1));
+            }
+          }   
+
+
+          if (box.get(box.size()-1).leftMost > rBB 
+            || box.get(box.size()-1).rightMost < lBB
+            || box.get(box.size()-1).topMost > dBB
+            || box.get(box.size()-1).lowMost < uBB) {
+            print("game over");
+            //play die animation
+          } else {
+            box.get(box.size()-1).theSlideOne = false;
+          }
+        }
+      }
+    }
+  }
 }
 
 
 //if spacebar is pressed, do...
 void keyPressed() {
+
+  if (key == 'K' || key == 'k') {
+    openScreen = false;
+    useKeyboard = true;
+  } else if (key == 'V' || key == 'v') {
+    openScreen = false;
+    useKeyboard = false;
+    if (!startedRecording) {
+      input.start();
+      // create a new Amplitude analyzer
+      rms = new Amplitude(this);
+      // Patch the input to an volume analyzer
+      rms.input(input);
+      input.amp(1.0);
+      startedRecording = true;
+    }
+  }
+
   if (useKeyboard) {
     if (!gameOver) {
       if (key == ' ') {
