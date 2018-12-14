@@ -17,7 +17,7 @@ class myRect {
   int lowMost = 600;
   int leftMost = 0;
   int rightMost = 600;
-  int speed = 2;
+  int speed = smallSpd;
 
   //the constructor for the basic one
   myRect() {

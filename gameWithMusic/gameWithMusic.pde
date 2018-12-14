@@ -10,6 +10,7 @@ int moveBackSpdX = 1;
 int moveBackSpdY = 1;
 int stepCounter = 0;
 int myScore = 0;
+int smallSpd = 2;
 
 //Visual effect
 PImage img;
@@ -30,15 +31,22 @@ String[] beePicName = {"bee1.png", "bee2.png", "bee3.png", "bee4.png"};
 PImage[] beePic = new PImage[beePicName.length];
 int beePicCounter = 0;
 int beePicTimeStamp = 0;
+int beePicAlpha = 255;
 
 float beeX;
 float beeY;
 
 ArrayList<PVector> beePrevPt = new ArrayList<PVector>();
 int beeTailTimeStamp = 0;
+int beeTailAlpha = 30;
 
 float beeTime = 0.0;
 float beeTimeIncrease = 0.008;
+
+//bee particle
+ArrayList<particle> beeParticles;
+boolean getBeePosDone = false;
+int beeParticlesCounter = 200;
 
 void setup() {
   size(600, 600);
@@ -52,11 +60,15 @@ void setup() {
   for (int i = 0; i < beePicName.length; i++) {
     beePic[i] = loadImage(beePicName[i]);
   }
+  
+  //bee particle
+  beeParticles = new ArrayList<particle>();
 }
 
 void draw() { 
   noStroke();
-  fill(254,255,250);
+  fill(50);
+  //fill(254,255,250);
   rectMode(CORNER);
   rect(0, 0, width, height);
 
@@ -65,7 +77,11 @@ void draw() {
   fillGap();
   gameController(); 
   moveToCenter();
+  if(!gameOver){
+    updateBeePos();
+  }
   drawBee();
+  checkBeeDie();
   
   //show score
   fill(249, 139, 127);
@@ -192,8 +208,9 @@ void fillGap() {
 //control the whole game flow
 void gameController() {
   //add one box to the screen in some frequency
-  if(frameCount%300 == 0){
+  if(frameCount%600 == 0 && frameCount <= 18000){
     speedIndex-=0.02;
+    smallSpd += 1;
   }
   if (floor(frameCount % 60*speedIndex) == 1) {
     int addAt = 0;
@@ -282,6 +299,12 @@ void doCutting() {
     for (int i = 0; i<box.size(); i++) {
       box.get(i).cutExtra(true, tempLB, tempHB);
     }
+    
+    //check bee x out of cutting lines
+    if(beeX < tempLB || beeX > tempHB){
+      gameOver = true;
+    }
+    
   } else {
     if (box.get(box.size()-1).topMost > uBB) {
       tempLB = box.get(box.size()-1).topMost;
@@ -301,12 +324,18 @@ void doCutting() {
     for (int i = 0; i<box.size(); i++) {
       box.get(i).cutExtra(false, tempLB, tempHB);
     }
+    
+    //check bee y out of cutting lines
+    if(beeY < tempLB || beeY > tempHB){
+      gameOver = true;
+    }
+    
   }
   box.get(box.size()-1).isSliding = false;
   box.get(box.size()-1).cutFinished = true;
 }
 
-void drawBee() {
+void updateBeePos(){
   //bee X, Y pos
   float tempX = noise(beeTime);
   beeX = map(tempX, 0, 1, lBB, rBB);
@@ -323,34 +352,65 @@ void drawBee() {
   if (beePrevPt.size() > 10) {
     beePrevPt.remove(0);
   }
+  
+  //bee flying noise 
+  beeTime += beeTimeIncrease;
+  
+}
 
+void drawBee() {
+  
   //draw bee tail
   for (int i = 0; i < beePrevPt.size(); i++) {
     PVector pt = beePrevPt.get(i);
     //fill(249, 139, 127, i * 30);
     //fill(255, i * 30);
-    fill(img.get(floor(pt.x), floor(pt.y)), i * 30);
+    fill(img.get(floor(pt.x), floor(pt.y)), i * beeTailAlpha);
     ellipse(pt.x, pt.y, 5, 5);
   }
 
   //draw bee pic animation
   imageMode(CENTER);
+  tint(255, beePicAlpha);
   image(beePic[beePicCounter%beePicName.length], beeX, beeY, 30, 30);
   if (millis() - beePicTimeStamp > 100) {
     beePicCounter += 1; 
     beePicTimeStamp = millis();
   }
+ 
+}
 
-  //bee flying noise 
-  beeTime += beeTimeIncrease;
+void drawBeeParticle(){
+    
+   beeParticles.add(new particle(new PVector(beeX,beeY)));
+   
+   for(int i = 0; i < beeParticles.size(); i++){
+    particle p = beeParticles.get(i);
+    p.play();
+    if(p.isDead()){
+      beeParticles.remove(i);
+    }
+  }
+  
+}
 
-  //gameover when the tail is cutted
+void checkBeeDie(){
+  
+  //when the tail is outside boundry
   for (int i = 0; i < beePrevPt.size(); i++) {
     PVector pt = beePrevPt.get(i);
     if (pt.x < lBB || pt.x > rBB || pt.y < uBB || pt.y > dBB) {
-      gameOver = true;
-      //print("game over");
+      beePrevPt.remove(i);
     }
+  }
+  
+  if(gameOver){
+    beePicAlpha -= 2;
+    beeTailAlpha -= 5;
+    if(beeParticlesCounter > 0){
+      drawBeeParticle();
+     }
+     beeParticlesCounter--;
   }
 }
 
