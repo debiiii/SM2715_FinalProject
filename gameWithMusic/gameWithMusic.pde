@@ -7,6 +7,7 @@ AudioIn input;
 Amplitude rms;
 
 //game flow
+boolean resetDone = false;
 boolean gameOver = false;
 int cubeL = 150;
 int cubeS = 20;
@@ -88,6 +89,7 @@ void setup() {
 
   //bee particle
   beeParticles = new ArrayList<particle>();
+
   input = new AudioIn(this, 0);
 }
 
@@ -152,13 +154,19 @@ void drawOpening() {
   openingBeeX = map(tempX, 0, 1, width/2 - 100, width/2 + 100);
   float tempY = noise(openingT + 150);
   openingBeeY = map(tempY, 0, 1, height/2 - 100, height/2 + 100);
-
+  println(" ");
+  println("x " + openingBeeX + " y " + openingBeeY);
+  println(" ");
+  
+  tint(255, beePicAlpha);
   image(beePic[openingCounter%beePicName.length], openingBeeX, openingBeeY, 50, 50);
   if (millis() - openingTimeStamp > 100) {
     openingCounter += 1; 
     openingTimeStamp = millis();
   }
   openingT += openingTIncrease;
+  
+  resetDone = false;
 }
 
 void drawEnding() {
@@ -209,6 +217,7 @@ void drawEnding() {
   }
 }
 
+
 void drawDecos() {
 
   for (int i = deco.size()-1; i>=0; i--) {
@@ -221,6 +230,8 @@ void drawDecos() {
     deco.get(i).wave();
   }
 }
+
+
 
 //update the boundary for the whole box
 void updateBoundary() {
@@ -546,32 +557,31 @@ void voiceControl() {
 
 
       if (!gameOver) {
-          //play note also okay
-          sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
-          sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
-          sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
-          sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
-          sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
-          noteCounter += 1;
-          //add note effect
-          for (int i = 0; i < 5; i++) {
-            if (note[noteCounter][i] != 0) {
-              deco.add(new myDeco(note[noteCounter][i], 5, 1));
-              deco.add(new myDeco(90, 5, 1));
-            }
-          }   
-
-
-          if (box.get(box.size()-1).leftMost > rBB 
-            || box.get(box.size()-1).rightMost < lBB
-            || box.get(box.size()-1).topMost > dBB
-            || box.get(box.size()-1).lowMost < uBB) {
-            print("game over");
-            //play die animation
-          } else {
-            box.get(box.size()-1).theSlideOne = false;
+        //play note also okay
+        sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+        sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
+        sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
+        sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+        sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
+        noteCounter += 1;
+        //add note effect
+        for (int i = 0; i < 5; i++) {
+          if (note[noteCounter][i] != 0) {
+            deco.add(new myDeco(note[noteCounter][i], 5, 1));
+            deco.add(new myDeco(90, 5, 1));
           }
-        
+        }   
+
+
+        if (box.get(box.size()-1).leftMost > rBB 
+          || box.get(box.size()-1).rightMost < lBB
+          || box.get(box.size()-1).topMost > dBB
+          || box.get(box.size()-1).lowMost < uBB) {
+          print("game over");
+          //play die animation
+        } else {
+          box.get(box.size()-1).theSlideOne = false;
+        }
       }
     }
   }
@@ -580,6 +590,14 @@ void voiceControl() {
 
 //if spacebar is pressed, do...
 void keyPressed() {
+  if (endScreen) {
+    if (key == 'R' || key == 'r') {
+      if (!resetDone) {
+        resetAll();
+        resetDone = true;
+      }
+    }
+  }
 
   if (key == 'K' || key == 'k') {
     openScreen = false;
