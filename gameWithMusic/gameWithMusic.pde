@@ -17,6 +17,7 @@ int stepCounter = 0;
 
 //Visual effect
 PImage img;
+ArrayList<myDeco> deco = new ArrayList<myDeco>();
 
 //boundary
 int lBB = 600;
@@ -60,11 +61,30 @@ void draw() {
   rectMode(CORNER);
   rect(0, 0, 600, 600);
 
+  drawDecos();
   updateBoundary();
   fillGap();
   gameController(); 
   moveToCenter();
   drawBee();
+  
+  deco.add(new myDeco(70));
+  
+        
+
+  
+}
+
+void drawDecos(){
+  for (int i = deco.size()-1; i>=0; i--) {
+    if (deco.get(i).finished == true) {
+      deco.remove(i);
+    }
+  }
+  
+  for(int i = 0; i<deco.size(); i++){
+    deco.get(i).wave();
+  }
 }
 
 //update the boundary for the whole box
