@@ -56,7 +56,7 @@ void setup() {
 
 void draw() { 
   noStroke();
-  fill(255);
+  fill(254,255,250);
   rectMode(CORNER);
   rect(0, 0, width, height);
 
@@ -192,6 +192,9 @@ void fillGap() {
 //control the whole game flow
 void gameController() {
   //add one box to the screen in some frequency
+  if(frameCount%300 == 0){
+    speedIndex-=0.02;
+  }
   if (floor(frameCount % 60*speedIndex) == 1) {
     int addAt = 0;
     //generate the position of the sliding box
