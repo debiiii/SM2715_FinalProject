@@ -101,6 +101,7 @@ void draw() {
   if (openScreen) {
     drawOpening();
   } else {
+    voiceControl();
     drawDecos();  
     if (!gameOver) {
       updateBoundary();
@@ -144,8 +145,8 @@ void drawOpening() {
   textAlign(CENTER, CENTER);
   text("BeeCut", width/2, height/2 - 150);
 
-  textFont(font, 20);
-  text("--  (K)keyboard /  (V)Voice  --", width/2, height - 100);
+  textFont(font, 16);
+  text("--  (K)eyboard /  (V)oice  --", width/2, height - 100);
 
   float tempX = noise(openingT);
   openingBeeX = map(tempX, 0, 1, width/2 - 100, width/2 + 100);
@@ -545,7 +546,6 @@ void voiceControl() {
 
 
       if (!gameOver) {
-        if (key == ' ') {
           //play note also okay
           sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
           sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
@@ -571,7 +571,7 @@ void voiceControl() {
           } else {
             box.get(box.size()-1).theSlideOne = false;
           }
-        }
+        
       }
     }
   }
