@@ -157,7 +157,7 @@ void drawOpening() {
   println(" ");
   println("x " + openingBeeX + " y " + openingBeeY);
   println(" ");
-  
+
   tint(255, beePicAlpha);
   image(beePic[openingCounter%beePicName.length], openingBeeX, openingBeeY, 50, 50);
   if (millis() - openingTimeStamp > 100) {
@@ -165,7 +165,7 @@ void drawOpening() {
     openingTimeStamp = millis();
   }
   openingT += openingTIncrease;
-  
+
   resetDone = false;
 }
 
@@ -215,7 +215,7 @@ void drawEnding() {
     String scoreTxt = nf(myScore, 5);
     text("RANKING No." + (i+1) + "            " + nf(Integer.parseInt(highScore[i]), 5), width/2, 205+ i*60);
   }
-  
+
   fill(255);
   textAlign(CENTER, CENTER);
   textFont(font, 16);
@@ -397,6 +397,19 @@ void gameController() {
   //check if the sliding box should be fixed
   if (box.size()>0 && !box.get(box.size()-1).theSlideOne && !box.get(box.size()-1).cutFinished) {
     //if so, cut all the boxes accordingly
+    sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+    sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
+    sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
+    sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+    sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
+    noteCounter += 1;
+    //add note effect
+    for (int i = 0; i < 5; i++) {
+      if (note[noteCounter][i] != 0) {
+        deco.add(new myDeco(note[noteCounter][i], 5, 1));
+        deco.add(new myDeco(90, 5, 1));
+      }
+    }
     doCutting();
     //origData();
     stepCounter = 0;
@@ -625,19 +638,7 @@ void keyPressed() {
     if (!gameOver) {
       if (key == ' ') {
         //play note also okay
-        sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
-        sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
-        sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
-        sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
-        sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
-        noteCounter += 1;
-        //add note effect
-        for (int i = 0; i < 5; i++) {
-          if (note[noteCounter][i] != 0) {
-            deco.add(new myDeco(note[noteCounter][i], 5, 1));
-            deco.add(new myDeco(90, 5, 1));
-          }
-        }   
+
 
 
         if (box.get(box.size()-1).leftMost > rBB 
