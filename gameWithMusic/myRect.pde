@@ -25,7 +25,7 @@ class myRect {
     ry = height/2;
     rw = cubeL;
     rh = cubeL;
-    c = color(249,139,127);
+    c = color(249, 139, 127);
     isSliding = false;
     theSlideOne = false;
     cutFinished = true;
@@ -163,6 +163,6 @@ class myRect {
   }
 
   //move the whole shape to the center point
-  void backToOrig(int deltaX, int deltaY) { 
+  void backToOrig(int deltaX, int deltaY) {
   }
 }

@@ -44,12 +44,12 @@ float beeTimeIncrease = 0.008;
 
 void setup() {
   size(600, 600);
-  img = loadImage("bg3.png");
+  img = loadImage("bg03.png");
   background(255);
   box.add(new myRect());
-  
+
   //bee
-  for(int i = 0; i < beePicName.length; i++){
+  for (int i = 0; i < beePicName.length; i++) {
     beePic[i] = loadImage(beePicName[i]);
   }
 }
@@ -65,7 +65,6 @@ void draw() {
   gameController(); 
   moveToCenter();
   drawBee();
-  
 }
 
 //update the boundary for the whole box
@@ -108,58 +107,57 @@ void updateBoundary() {
 }
 
 void origData() {
-  
+
   xTo0 = width/2-((rBB-lBB)/2 + lBB);
   yTo0 = height/2-((dBB-uBB)/2 + uBB);
   println("center: "+ ((rBB-lBB)/2 + lBB)+ " x: " + xTo0 + " ,y: " + yTo0);
-  
-  
-  moveBackSpdX = xTo0/8;
-  moveBackSpdY = yTo0/8;  
 
+
+  moveBackSpdX = xTo0/8;
+  moveBackSpdY = yTo0/8;
 }
 
 void moveToCenter() {
   origData();
-  if(stepCounter<16){
+  if (stepCounter<16) {
     for (int i = 0; i<box.size(); i++) {  
-        box.get(i).rx += moveBackSpdX;
-        box.get(i).ry += moveBackSpdY;       
+      box.get(i).rx += moveBackSpdX;
+      box.get(i).ry += moveBackSpdY;
     }
   }
   stepCounter += 1;
 }
 
-void fillGap(){
-  for(int i = 0; i<box.size(); i++){
-    for(int j = 0; j<box.size(); j++){
-      if(i!=j && !box.get(i).theSlideOne && !box.get(j).theSlideOne){
-      if(abs(box.get(i).rightMost - box.get(j).leftMost)<=5){
-        
-        rectMode(CORNERS);
-        if(box.get(i).rh < box.get(j).rh){   
-          fill(box.get(i).c);
-          rect(floor(box.get(i).rightMost), floor(box.get(i).topMost),
-          ceil(box.get(j).leftMost),  ceil(box.get(i).lowMost));
-        }else{
-          fill(box.get(j).c);
-          rect(floor(box.get(i).rightMost), floor(box.get(j).topMost),
-          ceil(box.get(j).leftMost),  ceil(box.get(j).lowMost));
+void fillGap() {
+  for (int i = 0; i<box.size(); i++) {
+    for (int j = 0; j<box.size(); j++) {
+      if (i!=j && !box.get(i).theSlideOne && !box.get(j).theSlideOne) {
+        if (abs(box.get(i).rightMost - box.get(j).leftMost)<=5) {
+
+          rectMode(CORNERS);
+          if (box.get(i).rh < box.get(j).rh) {   
+            fill(box.get(i).c);
+            rect(floor(box.get(i).rightMost), floor(box.get(i).topMost), 
+              ceil(box.get(j).leftMost), ceil(box.get(i).lowMost));
+          } else {
+            fill(box.get(j).c);
+            rect(floor(box.get(i).rightMost), floor(box.get(j).topMost), 
+              ceil(box.get(j).leftMost), ceil(box.get(j).lowMost));
+          }
         }
-      }
-      
-      if(abs(box.get(i).lowMost - box.get(j).topMost)<=5){
-        rectMode(CORNERS);
-        if(box.get(i).rw < box.get(j).rw){   
-          fill(box.get(i).c);
-          rect(floor(box.get(i).leftMost), floor(box.get(i).lowMost),
-          ceil(box.get(i).rightMost),  ceil(box.get(j).topMost));
-        }else{
-          fill(box.get(j).c);
-          rect(box.get(j).leftMost, floor(box.get(i).lowMost),
-          box.get(j).rightMost,  ceil(box.get(j).topMost));
+
+        if (abs(box.get(i).lowMost - box.get(j).topMost)<=5) {
+          rectMode(CORNERS);
+          if (box.get(i).rw < box.get(j).rw) {   
+            fill(box.get(i).c);
+            rect(floor(box.get(i).leftMost), floor(box.get(i).lowMost), 
+              ceil(box.get(i).rightMost), ceil(box.get(j).topMost));
+          } else {
+            fill(box.get(j).c);
+            rect(box.get(j).leftMost, floor(box.get(i).lowMost), 
+              box.get(j).rightMost, ceil(box.get(j).topMost));
+          }
         }
-      }
       }
     }
   }
@@ -221,7 +219,6 @@ void gameController() {
     doCutting();
     //origData();
     stepCounter = 0;
-    
   } else {
     //keep sliding
     box.get(box.size()-1).slideIn();
@@ -279,26 +276,26 @@ void doCutting() {
   box.get(box.size()-1).cutFinished = true;
 }
 
-void drawBee(){
+void drawBee() {
   //bee X, Y pos
   float tempX = noise(beeTime);
   beeX = map(tempX, 0, 1, lBB, rBB);
   float tempY = noise(beeTime + 150);
   beeY = map(tempY, 0, 1, uBB, dBB);
-  
+
   //bee tail pos
-  if(millis() - beeTailTimeStamp > 600){
+  if (millis() - beeTailTimeStamp > 600) {
     beePrevPt.add(new PVector(beeX, beeY, 0));
     beeTailTimeStamp = millis();
   }
-  
+
   //only keeping 10 point for bee tail
-  if(beePrevPt.size() > 10){
-      beePrevPt.remove(0);
-   }
-   
+  if (beePrevPt.size() > 10) {
+    beePrevPt.remove(0);
+  }
+
   //draw bee tail
-  for(int i = 0; i < beePrevPt.size(); i++){
+  for (int i = 0; i < beePrevPt.size(); i++) {
     PVector pt = beePrevPt.get(i);
     //fill(249, 139, 127, i * 30);
     //fill(255, i * 30);
@@ -309,23 +306,22 @@ void drawBee(){
   //draw bee pic animation
   imageMode(CENTER);
   image(beePic[beePicCounter%beePicName.length], beeX, beeY, 30, 30);
-  if(millis() - beePicTimeStamp > 100){
+  if (millis() - beePicTimeStamp > 100) {
     beePicCounter += 1; 
     beePicTimeStamp = millis();
   }
-  
+
   //bee flying noise 
   beeTime += beeTimeIncrease;
-  
+
   //gameover when the tail is cutted
-  for(int i = 0; i < beePrevPt.size(); i++){
+  for (int i = 0; i < beePrevPt.size(); i++) {
     PVector pt = beePrevPt.get(i);
-    if(pt.x < lBB || pt.x > rBB || pt.y < uBB || pt.y > dBB){
+    if (pt.x < lBB || pt.x > rBB || pt.y < uBB || pt.y > dBB) {
       gameOver = true;
       //print("game over");
     }
   }
-  
 }
 
 
@@ -339,7 +335,7 @@ void keyPressed() {
     sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
     sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
     noteCounter += 1;
-    
+
 
     if (box.get(box.size()-1).leftMost > rBB 
       || box.get(box.size()-1).rightMost < lBB
@@ -349,7 +345,6 @@ void keyPressed() {
       //play die animation
     } else {
       box.get(box.size()-1).theSlideOne = false;
-      
     }
   }
 }
