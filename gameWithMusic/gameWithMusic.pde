@@ -3,6 +3,9 @@ import processing.sound.*;
 SoundFile canon;
 Amplitude amp;
 
+AudioIn input;
+Amplitude rms;
+
 //game flow
 boolean gameOver = false;
 int cubeL = 150;
@@ -18,6 +21,7 @@ int myScore = 0;
 int smallSpd = 2;
 boolean endScreen = false;
 boolean cPlayed = false;
+boolean useKeyboard = true;
 
 //Visual effect
 PImage img;
@@ -75,6 +79,7 @@ void setup() {
 
   //bee particle
   beeParticles = new ArrayList<particle>();
+  input = new AudioIn(this, 0);
 }
 
 void draw() { 
@@ -483,34 +488,40 @@ void checkBeeDie() {
 }
 
 
+void voiceControl(){
+}
+
+
 //if spacebar is pressed, do...
 void keyPressed() {
-  if (!gameOver) {
-    if (key == ' ') {
-      //play note also okay
-      sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
-      sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
-      sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
-      sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
-      sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
-      noteCounter += 1;
-      //add note effect
-      for (int i = 0; i < 5; i++) {
-        if (note[noteCounter][i] != 0) {
-          deco.add(new myDeco(note[noteCounter][i], 5, 1));
-          deco.add(new myDeco(90, 5, 1));
+  if (useKeyboard) {
+    if (!gameOver) {
+      if (key == ' ') {
+        //play note also okay
+        sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
+        sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
+        sc3.playNote(note[noteCounter%note.length][2] + 12, 100, 4.0);
+        sc4.playNote(note[noteCounter%note.length][3] + 12, 100, 1.0);
+        sc5.playNote(note[noteCounter%note.length][4] + 12, 100, 0.5);
+        noteCounter += 1;
+        //add note effect
+        for (int i = 0; i < 5; i++) {
+          if (note[noteCounter][i] != 0) {
+            deco.add(new myDeco(note[noteCounter][i], 5, 1));
+            deco.add(new myDeco(90, 5, 1));
+          }
+        }   
+
+
+        if (box.get(box.size()-1).leftMost > rBB 
+          || box.get(box.size()-1).rightMost < lBB
+          || box.get(box.size()-1).topMost > dBB
+          || box.get(box.size()-1).lowMost < uBB) {
+          print("game over");
+          //play die animation
+        } else {
+          box.get(box.size()-1).theSlideOne = false;
         }
-      }   
-
-
-      if (box.get(box.size()-1).leftMost > rBB 
-        || box.get(box.size()-1).rightMost < lBB
-        || box.get(box.size()-1).topMost > dBB
-        || box.get(box.size()-1).lowMost < uBB) {
-        print("game over");
-        //play die animation
-      } else {
-        box.get(box.size()-1).theSlideOne = false;
       }
     }
   }
