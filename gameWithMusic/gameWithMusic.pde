@@ -1,8 +1,3 @@
-//array list for my bee
-//bee fly - noise
-//bee tail -bimage get color
-//rect - gradient?
-
 //game flow
 boolean gameOver = false;
 int cubeL = 150;
@@ -14,9 +9,11 @@ int yTo0 = 0;
 int moveBackSpdX = 1;
 int moveBackSpdY = 1;
 int stepCounter = 0;
+int myScore = 0;
 
 //Visual effect
 PImage img;
+PFont font;
 ArrayList<myDeco> deco = new ArrayList<myDeco>();
 
 //boundary
@@ -46,8 +43,10 @@ float beeTimeIncrease = 0.008;
 void setup() {
   size(600, 600);
   img = loadImage("bg03.png");
+  font = createFont("UniSansThin.otf", 32,true);
+  //loadFont("UniSansThin.otf");
   background(255);
-  box.add(new myRect());
+  box.add(new myRect());  
 
   //bee
   for (int i = 0; i < beePicName.length; i++) {
@@ -68,10 +67,16 @@ void draw() {
   moveToCenter();
   drawBee();
   
+  //show score
+  fill(249, 139, 127);
+  textFont(font,15);
+  String scoreTxt = nf(myScore, 5);
+  text("Score: " + scoreTxt, 20, 35); 
+  
+  //show HP Bar
   
   
-        
-
+  
   
 }
 
@@ -240,6 +245,7 @@ void gameController() {
     doCutting();
     //origData();
     stepCounter = 0;
+    myScore += 1;
   } else {
     //keep sliding
     box.get(box.size()-1).slideIn();
