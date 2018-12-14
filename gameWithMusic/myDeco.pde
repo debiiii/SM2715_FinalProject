@@ -19,6 +19,16 @@ class myDeco {
     spdControl = spd;
     rotateAdd = ra;
   }
+  
+  myDeco(int x, int y, int waveSize, int spd, int ra) {
+    // constructor code
+    waveX = x;
+    waveY = y;
+    //24,72
+    waveSizeNum = floor(map(waveSize, 30, 90, 3, 12));
+    spdControl = spd;
+    rotateAdd = ra;
+  }
 
   void wave() {
     //push pop

@@ -1,3 +1,8 @@
+import processing.sound.*;
+
+SoundFile canon;
+Amplitude amp;
+
 //game flow
 boolean gameOver = false;
 int cubeL = 150;
@@ -11,11 +16,15 @@ int moveBackSpdY = 1;
 int stepCounter = 0;
 int myScore = 0;
 int smallSpd = 2;
+boolean endScreen = false;
+boolean cPlayed = false;
 
 //Visual effect
 PImage img;
 PFont font;
 ArrayList<myDeco> deco = new ArrayList<myDeco>();
+ArrayList<myDeco> endDeco = new ArrayList<myDeco>();
+int endAlpha = 20;
 
 //boundary
 int lBB = width;
@@ -46,12 +55,15 @@ float beeTimeIncrease = 0.008;
 //bee particle
 ArrayList<particle> beeParticles;
 boolean getBeePosDone = false;
-int beeParticlesCounter = 200;
+int beeParticlesCounter = 150;
 
 void setup() {
   size(600, 600);
   img = loadImage("bg03.png");
   font = createFont("UniSansThin.otf", 32, true);
+  canon = new SoundFile(this, "canon.mp3");
+  amp = new Amplitude(this);
+  amp.input(canon);
   //loadFont("UniSansThin.otf");
   background(255);
   box.add(new myRect());  
@@ -89,10 +101,58 @@ void draw() {
   //show score
   fill(249, 139, 127);
   textFont(font, 15);
+  textAlign(CENTER);
   String scoreTxt = nf(myScore, 5);
-  text("Score: " + scoreTxt, 20, 35); 
+  text("Score: " + scoreTxt, 60, 35); 
 
-  //show HP Bar
+  if (endScreen) {
+    drawEnding();
+  }
+}
+
+void drawEnding() {
+  noStroke();
+  fill(50, endAlpha);
+  rectMode(CORNER);
+  rect(0, 0, width, height);
+  if (endAlpha<255) {
+    endAlpha += 30;
+  } else {
+    endAlpha = 255;
+  }
+  if (!cPlayed) {
+    canon.loop();
+    scoreList();
+    cPlayed = true;
+  }
+  //for start
+  //if(endDeco.size() == 0){
+  //  endDeco.add(new myDeco(100,100,floor(random(50,70)),2,1));
+  //}
+  if (amp.analyze()>0.3) {
+    endDeco.add(new myDeco(floor(amp.analyze()*100), 2, 1));
+  }  
+  for (int i = 0; i<endDeco.size(); i++) {
+    endDeco.get(i).wave();
+  }  
+  
+  fill(255);
+  textFont(font, 50);
+  textAlign(CENTER, CENTER);
+  text(myScore, width/2, 100); 
+
+  for (int i = 0; i<5; i++) {
+    noStroke();
+    fill(0,150);
+    rectMode(CENTER);
+    rect(width/2, 205+ i*60 , 250, 40, 10);
+    //fill(249, 139, 127);
+    fill(255);
+    textFont(font, 15);
+    textAlign(CENTER, CENTER);
+    String scoreTxt = nf(myScore, 5);
+    text("RANKING No." + i + "            " + nf(Integer.parseInt(highScore[i]), 5), width/2, 205+ i*60); 
+  }
 }
 
 void drawDecos() {
@@ -413,6 +473,9 @@ void checkBeeDie() {
       drawBeeParticle();
     }
     beeParticlesCounter--;
+    if (beeParticlesCounter <= 0) {
+      endScreen = true;
+    }
   }
 }
 
