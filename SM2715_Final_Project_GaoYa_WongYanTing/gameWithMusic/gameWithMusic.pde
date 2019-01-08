@@ -25,6 +25,9 @@ boolean cPlayed = false;
 boolean useKeyboard = true;
 boolean openScreen = true;
 boolean startedRecording = false;
+int gameOverCount = 0;
+boolean gameOverNext = false;
+boolean canClap = true;
 
 //Visual effect
 PImage img;
@@ -99,6 +102,16 @@ void draw() {
   //fill(254,255,250);
   rectMode(CORNER);
   rect(0, 0, width, height);
+  
+  if(gameOver){
+    gameOverCount += 1;
+    //remove the ones that have no volume
+  for (int i = box.size()-1; i>=0; i--) {
+    if (!box.get(i).checkAlive()) {
+      box.remove(i);
+    }
+  }
+  }
 
   if (openScreen) {
     drawOpening();
@@ -108,12 +121,15 @@ void draw() {
     if (!gameOver) {
       updateBoundary();
       gameController();
+      checkFirstDeath();
     }
     moveToCenter();
     if (!gameOver) {
       updateBeePos();
     }
-    fillGap();
+    //if(gameOverCount <= 1){
+      fillGap();
+    //}
     displayAlive();
     drawBee();
     checkBeeDie();
@@ -383,6 +399,7 @@ void gameController() {
     }
     //push one rect to the arraylist
     box.add(new myRect(dirCount, addAt, color(floor(random(158)), 226, 213)));
+    canClap = true;
     //update the adding direction for the next time
     dirCount = (dirCount+floor(random(5)))%4;
   }
@@ -567,14 +584,10 @@ void voiceControl() {
   if (!useKeyboard) {
     if (rms.analyze()>0.2) {
 
-
-
       println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-
-
-
-      if (!gameOver) {
+      if (!gameOver && canClap) {
+        canClap = false;
         //play note also okay
         sc.playNote(note[noteCounter%note.length][0] + 12, 100, 1.0);
         sc2.playNote(note[noteCounter%note.length][1] + 12, 100, 4.0);
